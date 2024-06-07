@@ -36,8 +36,8 @@ const random = new Random(1337);
 const call_manager = new Timer({
   fcn: () => phones[random.integer(0, 3)].add_random_call(),
   random,
-  randomRange: [0, 500],
-  interval: 500,
+  randomRange: [0, 1000],
+  interval: 1500,
   repeats: true,
 });
 
@@ -48,7 +48,6 @@ const timerBar: TimerBar = new TimerBar(
   60 * 1000
 );
 game.add(timerBar);
-
 game.add(call_manager);
 
 game.start();

@@ -55,6 +55,10 @@ export class Phone extends ex.Actor {
   }
 
   activate_call() {
-    this.active_call = this.call_queue.shift();
+    if (this.call_queue.length > 0) {
+      this.active_call = this.call_queue.shift();
+      this.active_call!.activate();
+      this.call_queue.forEach((c) => c.move_up());
+    }
   }
 }
