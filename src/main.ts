@@ -8,7 +8,8 @@ import {
 } from "excalibur";
 // game.js
 
-import {Phone } from './actors/phone';
+import { Phone } from "./actors/phone";
+import { Agent } from "./actors/agent";
 
 // start-snippet{create-engine}
 // Create an instance of the engine.
@@ -31,16 +32,10 @@ phones.forEach((phone) => {
   game.add(phone);
 });
 
-const agent: Actor = new Actor({
-  x: 150,
-  y: game.drawHeight - 40,
-  width: 20,
-  height: 20,
-  // Let's give it some color with one of the predefined
-  // color constants
-  color: Color.Chartreuse,
-});
+const agent1: Agent = new Agent(phones[0], 0, phones);
+const agent2: Agent = new Agent(phones[3], 1, phones);
 
-game.add(agent);
+game.add(agent1);
+game.add(agent2);
 
 game.start();
