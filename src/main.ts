@@ -49,12 +49,6 @@ const agent: Actor = new Actor({
   color: Color.Chartreuse,
 });
 
-// `game.add` is the same as calling
-// `game.currentScene.add`
 game.add(agent);
-// end-snippet{create-paddle}
 
-// start-snippet{start-game}
-// Start the engine to begin the game.
 game.start();
-// end-snippet{start-game}
