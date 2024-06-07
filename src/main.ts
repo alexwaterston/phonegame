@@ -1,10 +1,9 @@
 import {
   Actor,
-  CollisionStartEvent,
-  CollisionType,
   Color,
   Engine,
-  vec,
+  Timer,
+  Random
 } from "excalibur";
 // game.js
 
@@ -21,7 +20,6 @@ const game = new Engine({
 });
 // end-snippet{create-engine}
 
-const phone_colours = [Color.Red, Color.Blue, Color.Orange, Color.Yellow];
 const phones: Phone[] = [];
 for (let i = 0; i < 4; i++) {
   phones.push(
@@ -37,5 +35,17 @@ const agent2: Agent = new Agent(phones[3], 1, phones);
 
 game.add(agent1);
 game.add(agent2);
+const random = new Random(1337);
+const call_manager = new Timer({
+    fcn: () => phones[random.integer(0, 3)].add_random_call(),
+    random,
+    randomRange: [0, 500],
+    interval: 500,
+    repeats: true
+  }
+);
+
+game.add(call_manager);
 
 game.start();
+call_manager.start();

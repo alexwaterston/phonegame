@@ -1,4 +1,6 @@
 import * as ex from "excalibur";
+import { Call } from './call';
+import { Agent } from "./agent";
 
 const phone_colours = [
   ex.Color.Red,
@@ -8,17 +10,43 @@ const phone_colours = [
 ];
 
 export class Phone extends ex.Actor {
-  constructor(x: number, y: number, no: number) {
-    super({
-      name: "Phone " + no,
-      pos: new ex.Vector(x, y),
-      x: x,
-      y: y,
-      width: 80,
-      height: 60,
-      color: phone_colours[no],
-    });
-    this.phone_no = no;
-    this.agent = undefined;
-  }
+	public active_call: Call | undefined = undefined;
+	public call_queue: Call[] = [];
+
+	public phone_no: number;
+	public agent: Agent | undefined;
+
+	constructor(x: number, y: number, no: number) {
+		super({
+			name: 'Phone ' + no,
+			pos: new ex.Vector(x, y),
+			width: 80,
+			height: 60,
+			color: phone_colours[no]
+		});
+		this.phone_no = no;
+    	this.agent = undefined;
+	}
+
+	add_random_call() {
+		if (this.call_queue.length >= 4) {
+			return;
+		}
+
+		const call = new Call(this, this.call_queue.length);
+		this.call_queue.push(call);
+
+		var game = ex.Engine.useEngine();
+		game.add(call);
+
+		// this.activate_call();
+	}
+
+	// activate_call() {
+	// 	if (this.call_queue.length > 0) {
+	// 		this.active_call = this.call_queue.shift();
+
+	// 		this.call_queue.forEach((c) => c.move_up());
+	// 	}
+	// }
 }
