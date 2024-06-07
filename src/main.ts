@@ -19,7 +19,6 @@ const game = new Engine({
 });
 // end-snippet{create-engine}
 
-const phone_colours = [Color.Red, Color.Blue, Color.Orange, Color.Yellow];
 const phones: Phone[] = [];
 for (let i = 0; i < 4; i++) {
   phones.push(
@@ -31,8 +30,8 @@ phones.forEach((phone) => {
 });
 
 const random = new Random(1337);
-  const call_manager = new Timer({
-    fcn: () => 
+const call_manager = new Timer({
+    fcn: () => phones[random.integer(0, 3)].add_random_call(),
     random,
     randomRange: [0, 500],
     interval: 500,
@@ -55,5 +54,7 @@ const agent: Actor = new Actor({
 });
 
 game.add(agent);
+game.add(call_manager);
 
 game.start();
+call_manager.start();
