@@ -2,8 +2,12 @@ import * as ex from "excalibur";
 
 const agent_colours = [ex.Color.Red, ex.Color.Blue];
 const agent_keys = [
-  { left: ex.Input.Keys.Left, right: ex.Input.Keys.Right },
-  { left: ex.Input.Keys.Z, right: ex.Input.Keys.X },
+  { left: ex.Input.Keys.A, right: ex.Input.Keys.D, up: ex.Input.Keys.W },
+  {
+    left: ex.Input.Keys.Left,
+    right: ex.Input.Keys.Right,
+    up: ex.Input.Keys.Up,
+  },
 ];
 
 export class Agent extends ex.Actor {
@@ -30,6 +34,7 @@ export class Agent extends ex.Actor {
   }
 
   onPreUpdate(engine: ex.Engine, delta: number) {
+    //MOVE LEFT
     if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].left)) {
       if (this.current_phone.phone_no > 0) {
         const new_phone = this.current_phone.phone_no - 1;
@@ -39,6 +44,7 @@ export class Agent extends ex.Actor {
       }
     }
 
+    //MOVE RIGHT
     if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right)) {
       if (this.current_phone.phone_no < this.phone_bank.length - 1) {
         const new_phone = this.current_phone.phone_no + 1;
@@ -46,6 +52,11 @@ export class Agent extends ex.Actor {
           this.moveToPhone(this.phone_bank[new_phone]);
         }
       }
+    }
+
+    // ANSWER CALL
+    if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up)) {
+      this.current_phone.pick_up();
     }
   }
 }
