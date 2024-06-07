@@ -3,10 +3,10 @@ import { Call } from "./call";
 import { Agent } from "./agent";
 
 const phone_colours = [
-  ex.Color.Red,
-  ex.Color.Blue,
-  ex.Color.Orange,
-  ex.Color.Yellow,
+  ex.Color.LightGray,
+  ex.Color.LightGray,
+  ex.Color.LightGray,
+  ex.Color.LightGray,
 ];
 
 export class Phone extends ex.Actor {

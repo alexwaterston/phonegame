@@ -3,14 +3,15 @@ import { Actor, Color, Engine, Timer, Random, Flags } from "excalibur";
 
 import { Phone } from "./actors/phone";
 import { Agent } from "./actors/agent";
-import { TimerBar } from "./actors/timerBar";
+//import { ProgressBar } from "./actors/progress_bar";
+import { TimerBar } from "./actors/timer_bar";
 
 // start-snippet{create-engine}
 // Create an instance of the engine.
 // I'm specifying that the game be 800 pixels wide by 600 pixels tall.
 // If no dimensions are specified the game will fit to the screen.
 
-Flags.useCanvasGraphicsContext();
+//Flags.useCanvasGraphicsContext();
 const game = new Engine({
   width: 1024,
   height: 768,
@@ -42,10 +43,12 @@ const call_manager = new Timer({
 });
 
 const timerBar: TimerBar = new TimerBar(
-  game.drawWidth / 2,
-  50,
+  (game.drawWidth - (game.drawWidth - 100)) / 2,
+  40,
   game.drawWidth - 100,
-  60 * 1000
+  20,
+  60 * 1000,
+  Color.Green
 );
 game.add(timerBar);
 game.add(call_manager);

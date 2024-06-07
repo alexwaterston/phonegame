@@ -63,7 +63,7 @@ export class Agent extends ex.Actor {
 
     // ANSWER CALL
     if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up)) {
-      this.current_phone.pick_up();
+      this.current_phone.pickup();
     }
   }
 }
