@@ -7,6 +7,8 @@ import {
 } from "excalibur";
 // game.js
 
+import {Phone } from './actors/phone';
+
 // start-snippet{create-engine}
 // Create an instance of the engine.
 // I'm specifying that the game be 800 pixels wide by 600 pixels tall.
@@ -18,16 +20,10 @@ const game = new Engine({
 // end-snippet{create-engine}
 
 const phone_colours = [Color.Red, Color.Blue, Color.Orange, Color.Yellow];
-const phones: Actor[] = [];
+const phones: Phone[] = [];
 for (let i = 0; i < 4; i++) {
   phones.push(
-    new Actor({
-      x: (game.drawWidth / 5) * (i + 1),
-      y: game.drawHeight - 100,
-      width: 50,
-      height: 30,
-      color: phone_colours[i],
-    })
+    new Phone((game.drawWidth / 5) * (i + 1), game.drawHeight - 200, i)
   );
 }
 phones.forEach((phone) => {
