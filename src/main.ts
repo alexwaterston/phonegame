@@ -1,10 +1,9 @@
 import {
   Actor,
-  CollisionStartEvent,
-  CollisionType,
   Color,
   Engine,
-  vec,
+  Timer,
+  Random
 } from "excalibur";
 // game.js
 
@@ -34,6 +33,16 @@ for (let i = 0; i < 4; i++) {
 phones.forEach((phone) => {
   game.add(phone);
 });
+
+const random = new Random(1337);
+  const call_manager = new Timer({
+    fcn: () => 
+    random,
+    randomRange: [0, 500],
+    interval: 500,
+    repeats: true
+  }
+);
 
 // start-snippet{create-paddle}
 // Create an actor with x position of 150px,
