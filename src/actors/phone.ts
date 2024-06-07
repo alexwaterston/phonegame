@@ -22,7 +22,7 @@ export class Phone extends ex.Actor {
 			pos: new ex.Vector(x, y),
 			width: 80,
 			height: 60,
-			color: phone_colours[no]
+			color: ex.Color.Black
 		});
 		this.phone_no = no;
     	this.agent = undefined;
@@ -39,14 +39,17 @@ export class Phone extends ex.Actor {
 		var game = ex.Engine.useEngine();
 		game.add(call);
 
-		// this.activate_call();
+		if (!this.active_call){
+			this.activate_call();
+		}
 	}
 
-	// activate_call() {
-	// 	if (this.call_queue.length > 0) {
-	// 		this.active_call = this.call_queue.shift();
-
-	// 		this.call_queue.forEach((c) => c.move_up());
-	// 	}
-	// }
+	activate_call() {
+		if (this.call_queue.length > 0) {
+			this.active_call = this.call_queue.shift();
+			this.active_call!.activate();
+			
+			this.call_queue.forEach((c) => c.move_up());
+		}
+	}
 }
