@@ -18,8 +18,12 @@ export class TimerBar extends ProgressBar {
     self.time_remaining = max_time;
   }
 
+  isFinished(): Boolean {
+    return !(self.time_remaining > 0);
+  }
+
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
-    self.time_remaining = self.time_remaining - delta;
+    self.time_remaining = Math.max(0, self.time_remaining - delta);
     super.setValue(self.time_remaining);
   }
 }
