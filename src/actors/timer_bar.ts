@@ -20,7 +20,7 @@ export class TimerBar extends ProgressBar {
     return !(this.time_remaining > 0);
   }
 
-  onPreUpdate(engine: ex.Engine<any>, delta: number): void {
+  onPreUpdate(_: ex.Engine<any>, delta: number): void {
     this.time_remaining = Math.max(0, this.time_remaining - delta);
     super.setValue(this.time_remaining);
   }
