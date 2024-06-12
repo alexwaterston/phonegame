@@ -57,11 +57,11 @@ export class Phone extends ex.Actor {
     }
 
     this.active_call?.answer();
-    var call_time: number = 3000;
+    var call_time: number = 4000;
     if (this.active_call?.speciality === this.agent?.strength) {
       call_time = 2000;
     } else if (this.active_call?.speciality === this.agent?.weakness) {
-      call_time = 5000;
+      call_time = 8000;
     }
 
     this.call_timer = new TimerBar(

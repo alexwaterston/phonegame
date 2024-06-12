@@ -1,7 +1,5 @@
 import * as ex from "excalibur";
 
-const timer_colour = ex.Color.Green;
-
 export class ProgressBar extends ex.Actor {
   max: number;
   value: number;
@@ -15,7 +13,6 @@ export class ProgressBar extends ex.Actor {
     color: ex.Color
   ) {
     super({
-      name: "Bar",
       pos: new ex.Vector(x, y),
       width: width,
       height: height,
@@ -26,7 +23,7 @@ export class ProgressBar extends ex.Actor {
   }
 
   setValue(value: number) {
-    this.value = value;
+    this.value = Math.max(0, value);
     this.scale = new ex.Vector(this.value / this.max, 1);
   }
 }

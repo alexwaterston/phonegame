@@ -1,12 +1,14 @@
 import * as ex from "excalibur";
 import { Phone } from "./phone";
 import { Speciality } from "enums/speciality";
+import { ColourBar } from "./colour_bar";
 
 export class Call extends ex.Actor {
   arrivalTime: number;
   pickupTime: number | undefined;
   phone: Phone;
   speciality: Speciality;
+  satisfaction: ColourBar;
 
   constructor(phone: Phone, queuePosition: number) {
     const random = new ex.Random();
@@ -27,6 +29,19 @@ export class Call extends ex.Actor {
     this.speciality = speciality;
     this.phone = phone;
     this.arrivalTime = Date.now();
+    this.satisfaction = new ColourBar(
+      -(this.width + 20) / 2,
+      -30,
+      this.width + 20,
+      10,
+      100
+    );
+    this.addChild(this.satisfaction);
+  }
+
+  onPreUpdate(engine: ex.Engine<any>, delta: number): void {
+    super.onPreUpdate(engine, delta);
+    this.satisfaction.setValue(this.satisfaction.value - delta / 100);
   }
 
   move_up() {

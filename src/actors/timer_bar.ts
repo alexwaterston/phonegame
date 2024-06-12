@@ -1,8 +1,6 @@
 import * as ex from "excalibur";
 import { ProgressBar } from "./progress_bar";
 
-const timer_colour = ex.Color.Green;
-
 export class TimerBar extends ProgressBar {
   time_remaining: number = 0;
 
@@ -15,15 +13,15 @@ export class TimerBar extends ProgressBar {
     color: ex.Color
   ) {
     super(x, y, width, height, max_time, color);
-    self.time_remaining = max_time;
+    this.time_remaining = max_time;
   }
 
   isFinished(): Boolean {
-    return !(self.time_remaining > 0);
+    return !(this.time_remaining > 0);
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
-    self.time_remaining = Math.max(0, self.time_remaining - delta);
-    super.setValue(self.time_remaining);
+    this.time_remaining = Math.max(0, this.time_remaining - delta);
+    super.setValue(this.time_remaining);
   }
 }
