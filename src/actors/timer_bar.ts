@@ -15,15 +15,15 @@ export class TimerBar extends ProgressBar {
     color: ex.Color
   ) {
     super(x, y, width, height, max_time, color);
-    self.time_remaining = max_time;
+    this.time_remaining = max_time;
   }
 
   isFinished(): Boolean {
-    return !(self.time_remaining > 0);
+    return !(this.time_remaining > 0);
   }
 
-  onPreUpdate(engine: ex.Engine<any>, delta: number): void {
-    self.time_remaining = Math.max(0, self.time_remaining - delta);
-    super.setValue(self.time_remaining);
+  onPreUpdate(_: ex.Engine<any>, delta: number): void {
+    this.time_remaining = Math.max(0, this.time_remaining - delta);
+    super.setValue(this.time_remaining);
   }
 }
