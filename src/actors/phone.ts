@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import { Call } from "./call";
 import { Agent } from "./agent";
 import { TimerBar } from "./timer_bar";
+import { MainGame } from "scenes/maingame";
 
 const phone_colours = [
   ex.Color.LightGray,
@@ -19,6 +20,8 @@ export class Phone extends ex.Actor {
 
   public call_timer: TimerBar | undefined;
 
+  public main_game: MainGame;
+
   constructor(x: number, y: number, no: number) {
     super({
       name: "Phone " + no,
@@ -29,6 +32,10 @@ export class Phone extends ex.Actor {
     });
     this.phone_no = no;
     this.agent = undefined;
+  }
+
+  onInitialize(engine: ex.Engine<any>): void {
+    this.main_game = engine.currentScene;
   }
 
   add_random_call() {
@@ -77,6 +84,25 @@ export class Phone extends ex.Actor {
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
+    if (
+      this.call_queue.length > 0 &&
+      this.call_queue[0].satisfaction.value === 0
+    ) {
+      const missed_call = this.call_queue.shift();
+      engine.remove(missed_call);
+      this.call_queue.forEach((c) => c.move_up());
+      this.main_game.callFailed();
+    }
+    if (
+      this.active_call &&
+      !this.call_timer &&
+      this.active_call.satisfaction.value === 0
+    ) {
+      engine.remove(this.active_call);
+      this.active_call = undefined;
+      this.activate_call();
+      this.main_game.callFailed();
+    }
     if (this.call_timer && this.call_timer.isFinished()) {
       engine.remove(this.call_timer);
       this.call_timer = undefined;
@@ -84,6 +110,7 @@ export class Phone extends ex.Actor {
       engine.remove(this.active_call!);
       this.active_call = undefined;
       this.activate_call();
+      this.main_game.callAnswered();
     }
   }
   activate_call() {

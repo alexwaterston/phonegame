@@ -9,6 +9,7 @@ export class Call extends ex.Actor {
   phone: Phone;
   speciality: Speciality;
   satisfaction: ColourBar;
+  pickedup: Boolean = false;
 
   constructor(phone: Phone, queuePosition: number) {
     const random = new ex.Random();
@@ -41,7 +42,9 @@ export class Call extends ex.Actor {
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
     super.onPreUpdate(engine, delta);
-    this.satisfaction.setValue(this.satisfaction.value - delta / 100);
+    if (!this.pickedup) {
+      this.satisfaction.setValue(this.satisfaction.value - delta / 100);
+    }
   }
 
   move_up() {
@@ -53,6 +56,7 @@ export class Call extends ex.Actor {
   }
 
   answer() {
+    this.pickedup = true;
     this.pickupTime = Date.now();
   }
 
