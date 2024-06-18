@@ -2,6 +2,13 @@ import * as ex from "excalibur";
 import { ProgressBar } from "./progress_bar";
 
 const bar_colours = [ex.Color.Red, ex.Color.Orange, ex.Color.Green];
+
+export enum BarStatus {
+  Low,
+  Mid,
+  High,
+}
+
 export class ColourBar extends ProgressBar {
   mid: number;
   high: number;
@@ -30,5 +37,15 @@ export class ColourBar extends ProgressBar {
   setValue(value: number): void {
     super.setValue(value);
     this.setColour();
+  }
+
+  getStatus(): BarStatus {
+    var s = BarStatus.High;
+    if (this.value < this.mid) {
+      s = BarStatus.Low;
+    } else if (this.value < this.high) {
+      s = BarStatus.Mid;
+    }
+    return s;
   }
 }

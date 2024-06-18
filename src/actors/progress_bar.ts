@@ -23,7 +23,12 @@ export class ProgressBar extends ex.Actor {
   }
 
   setValue(value: number) {
-    this.value = Math.max(0, value);
+    this.value = value;
+    if (this.value < 0) {
+      this.value = 0;
+    } else if (value > this.max) {
+      this.value = this.max;
+    }
     this.scale = new ex.Vector(this.value / this.max, 1);
   }
 

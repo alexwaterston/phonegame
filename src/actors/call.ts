@@ -59,9 +59,4 @@ export class Call extends ex.Actor {
     this.pickedup = true;
     this.pickupTime = Date.now();
   }
-
-  resolve(): number {
-    // TODO: Scoring logic
-    return 1;
-  }
 }
