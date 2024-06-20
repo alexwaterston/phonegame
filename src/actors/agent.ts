@@ -16,8 +16,8 @@ const agent_keys = [
   },
 ];
 const agent_specialties = [
-  { strength: Speciality.Software, weakness: Speciality.Printers },
-  { strength: Speciality.Printers, weakness: Speciality.Software },
+  { strength: Speciality.Software, weakness: Speciality.Security },
+  { strength: Speciality.Security, weakness: Speciality.Software },
 ];
 
 export class Agent extends ex.Actor {

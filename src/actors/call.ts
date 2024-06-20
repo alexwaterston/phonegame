@@ -11,21 +11,21 @@ export class Call extends ex.Actor {
   satisfaction: ColourBar;
   pickedup: Boolean = false;
 
-  constructor(phone: Phone, queuePosition: number) {
-    const random = new ex.Random();
-    const speciality = random.integer(0, 2);
-
+  constructor(phone: Phone, queuePosition: number, speciality: Speciality) {
+    //const speciality = random.integer(0, 2);
     super({
       pos: new ex.Vector(phone.pos.x, phone.pos.y - 100 * (queuePosition + 1)),
       width: 30,
       height: 30,
       color:
-        speciality === 0
+        speciality === Speciality.Software
           ? ex.Color.Red
-          : speciality == 1
+          : speciality == Speciality.Security
           ? ex.Color.Blue
           : ex.Color.Yellow,
     });
+
+    const random = new ex.Random();
 
     this.speciality = speciality;
     this.phone = phone;

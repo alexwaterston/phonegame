@@ -5,8 +5,9 @@ import { Agent } from "actors/agent";
 import { TimerBar } from "actors/timer_bar";
 import { ColourBar, BarStatus } from "actors/colour_bar";
 import { EndGameScreen } from "./gameend";
+import { Speciality } from "enums/speciality";
 
-const NUMBER_OF_PHONES = 6;
+const NUMBER_OF_PHONES = 5;
 
 export class MainGame extends ex.Scene {
   timerBar: TimerBar | undefined;
@@ -44,11 +45,17 @@ export class MainGame extends ex.Scene {
     //const random = new ex.Random();
 
     const call_manager = new ex.Timer({
-      fcn: () =>
-        this.phones[random.integer(0, NUMBER_OF_PHONES - 1)].add_random_call(),
+      fcn: () => {
+        const middle_phone = Math.ceil(NUMBER_OF_PHONES / 2);
+        const left = random.integer(0, middle_phone);
+        const right = random.integer(middle_phone, NUMBER_OF_PHONES - 1);
+        this.phones[left].add_random_call();
+        this.phones[right].add_random_call();
+        call_manager.reset(Math.max(call_manager.interval - 200, 500));
+      },
       random,
-      randomRange: [0, 1000],
-      interval: 1500,
+      randomRange: [0, 500],
+      interval: 2000,
       repeats: true,
     });
 
@@ -84,8 +91,8 @@ export class MainGame extends ex.Scene {
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
     if (
-      this.timerBar?.isFinished() ||
-      this.overallSatisfactionBar?.value == 0
+      this.timerBar?.isFinished()
+      //|| this.overallSatisfactionBar?.value == 0
     ) {
       var es = engine.scenes["GameEnd"];
       (es as EndGameScreen).score = this.overallSatisfactionBar?.value;

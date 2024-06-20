@@ -3,6 +3,7 @@ import { Call } from "./call";
 import { Agent } from "./agent";
 import { TimerBar } from "./timer_bar";
 import { MainGame } from "scenes/maingame";
+import { Speciality } from "enums/speciality";
 
 const phone_colour = ex.Color.LightGray;
 
@@ -16,6 +17,7 @@ export class Phone extends ex.Actor {
   public call_timer: TimerBar | undefined;
 
   public main_game: MainGame;
+  public call_distribution: Speciality[];
 
   constructor(x: number, y: number, no: number) {
     super({
@@ -27,18 +29,57 @@ export class Phone extends ex.Actor {
     });
     this.phone_no = no;
     this.agent = undefined;
+    this.call_distribution = [
+      Speciality.Printers,
+      Speciality.Security,
+      Speciality.Software,
+    ];
   }
 
   onInitialize(engine: ex.Engine<any>): void {
-    this.main_game = engine.currentScene;
+    this.main_game = engine.currentScene as MainGame;
+    const number_of_phones = this.main_game.phones.length;
+    const middle_phone = Math.ceil(number_of_phones / 2);
+    if (this.phone_no == middle_phone) {
+      this.call_distribution = [
+        Speciality.Printers,
+        Speciality.Security,
+        Speciality.Software,
+      ];
+    } else if (this.phone_no == 0) {
+      this.call_distribution = [Speciality.Software, Speciality.Printers];
+    } else if (this.phone_no == number_of_phones - 1) {
+      this.call_distribution = [Speciality.Printers, Speciality.Security];
+    } else if (this.phone_no < middle_phone) {
+      this.call_distribution = [
+        Speciality.Software,
+        Speciality.Software,
+        Speciality.Printers,
+        Speciality.Printers,
+        Speciality.Security,
+      ];
+    } else {
+      this.call_distribution = [
+        Speciality.Software,
+        Speciality.Printers,
+        Speciality.Printers,
+        Speciality.Security,
+        Speciality.Security,
+      ];
+    }
   }
 
   add_random_call() {
     if (this.call_queue.length >= 4) {
       return;
     }
+    const random = new ex.Random();
 
-    const call = new Call(this, this.call_queue.length);
+    const call = new Call(
+      this,
+      this.call_queue.length,
+      random.pickOne(this.call_distribution)
+    );
     this.call_queue.push(call);
 
     var game = ex.Engine.useEngine();
@@ -59,11 +100,11 @@ export class Phone extends ex.Actor {
     }
 
     this.active_call?.answer();
-    var call_time: number = 4000;
+    var call_time: number = 200;
     if (this.active_call?.speciality === this.agent?.strength) {
-      call_time = 2000;
+      call_time = 200;
     } else if (this.active_call?.speciality === this.agent?.weakness) {
-      call_time = 8000;
+      call_time = 5000;
     }
 
     this.call_timer = new TimerBar(
