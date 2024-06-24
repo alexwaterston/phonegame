@@ -70,7 +70,9 @@ export class Phone extends ex.Actor {
   }
 
   add_random_call() {
+    this.color = ex.Color.LightGray;
     if (this.call_queue.length >= 4) {
+      //this.main_game.callFailed();
       return;
     }
     const random = new ex.Random();
@@ -99,12 +101,12 @@ export class Phone extends ex.Actor {
       return;
     }
 
+    var game = ex.Engine.useEngine();
+
     this.active_call?.answer();
-    var call_time: number = 200;
-    if (this.active_call?.speciality === this.agent?.strength) {
-      call_time = 200;
-    } else if (this.active_call?.speciality === this.agent?.weakness) {
-      call_time = 5000;
+    var call_time: number = 150;
+    if (this.active_call?.speciality === this.agent?.weakness) {
+      this.main_game.callFailed();
     }
 
     this.call_timer = new TimerBar(
@@ -115,38 +117,23 @@ export class Phone extends ex.Actor {
       call_time,
       this.active_call!.color
     );
-    var game = ex.Engine.useEngine();
+
     game.add(this.call_timer);
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
-    if (
-      this.call_queue.length > 0 &&
-      this.call_queue[0].satisfaction.value == 0
-    ) {
-      const missed_call = this.call_queue.shift();
-      engine.remove(missed_call);
-      this.call_queue.forEach((c) => c.move_up());
-      this.main_game.callFailed();
-    }
-    if (
-      this.active_call &&
-      !this.call_timer &&
-      this.active_call.satisfaction.value == 0
-    ) {
-      engine.remove(this.active_call);
-      this.active_call = undefined;
-      this.activate_call();
-      this.main_game.callFailed();
-    }
     if (this.call_timer && this.call_timer.isFinished()) {
       engine.remove(this.call_timer);
       this.call_timer = undefined;
-      this.main_game.callAnswered(this.active_call.satisfaction.getStatus());
+      this.main_game.callAnswered();
       engine.remove(this.active_call!);
       this.active_call = undefined;
       this.activate_call();
     }
+  }
+
+  highlight_next_call() {
+    this.color = ex.Color.Rose;
   }
 
   activate_call() {

@@ -1,4 +1,12 @@
-import { Actor, Color, Engine, Timer, Random, Flags } from "excalibur";
+import {
+  Actor,
+  Color,
+  Engine,
+  Timer,
+  Random,
+  Flags,
+  DisplayMode,
+} from "excalibur";
 // game.js
 
 import { Phone } from "./actors/phone";
@@ -16,6 +24,7 @@ import { MainGame } from "scenes/maingame";
 const game = new Engine({
   width: 1024,
   height: 768,
+  displayMode: DisplayMode.FitScreen,
 });
 // end-snippet{create-engine}
 

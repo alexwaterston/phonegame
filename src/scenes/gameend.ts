@@ -29,7 +29,7 @@ export class EndGameScreen extends ex.Scene {
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
-    if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+    if (engine.input.keyboard.wasPressed(ex.Keys.Space)) {
       const main: MainGame = new MainGame();
       engine.add("Main", main);
       engine.goToScene("Main");
