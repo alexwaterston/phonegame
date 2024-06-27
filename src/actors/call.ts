@@ -2,6 +2,9 @@ import * as ex from "excalibur";
 import { Phone } from "./phone";
 import { Speciality } from "enums/speciality";
 import { ColourBar } from "./colour_bar";
+import { callSprites } from "../resources";
+
+const CALL_GAP = 50;
 
 export class Call extends ex.Actor {
   phone: Phone;
@@ -10,16 +13,19 @@ export class Call extends ex.Actor {
 
   constructor(phone: Phone, queuePosition: number, speciality: Speciality) {
     super({
-      pos: new ex.Vector(phone.pos.x, phone.pos.y - 100 * (queuePosition + 1)),
-      width: 30,
-      height: 30,
-      color:
-        speciality === Speciality.Software
-          ? ex.Color.Red
-          : speciality == Speciality.Security
-          ? ex.Color.Blue
-          : ex.Color.Yellow,
+      pos: new ex.Vector(
+        phone.pos.x,
+        phone.pos.y - CALL_GAP * (queuePosition + 2)
+      ),
     });
+
+    const sprite =
+      speciality === Speciality.Software
+        ? callSprites.circle
+        : speciality == Speciality.Security
+        ? callSprites.triangle
+        : callSprites.square;
+    this.graphics.use(sprite);
 
     const random = new ex.Random();
 
@@ -32,11 +38,11 @@ export class Call extends ex.Actor {
   }
 
   move_up() {
-    this.pos.y += 100;
+    this.pos.y += CALL_GAP;
   }
 
   activate() {
-    this.pos.y = this.phone.pos.y;
+    this.pos.y = this.phone.pos.y + 5;
   }
 
   answer() {

@@ -89,7 +89,7 @@ export class MainGame extends ex.Scene {
       engine.drawWidth - 100,
       20,
       60 * 1000,
-      ex.Color.Green
+      ex.Color.Black
     );
 
     this.overallSatisfactionBar = new ColourBar(

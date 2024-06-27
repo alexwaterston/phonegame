@@ -4,8 +4,7 @@ import { Agent } from "./agent";
 import { TimerBar } from "./timer_bar";
 import { MainGame } from "scenes/maingame";
 import { Speciality } from "enums/speciality";
-
-const phone_colour = ex.Color.LightGray;
+import { phoneSprites } from "../resources";
 
 export class Phone extends ex.Actor {
   public active_call: Call | undefined = undefined;
@@ -18,6 +17,7 @@ export class Phone extends ex.Actor {
 
   public main_game: MainGame;
   public call_distribution: Speciality[];
+  public handset: ex.Actor;
 
   constructor(x: number, y: number, no: number) {
     super({
@@ -25,8 +25,18 @@ export class Phone extends ex.Actor {
       pos: new ex.Vector(x, y),
       width: 80,
       height: 60,
-      color: phone_colour,
     });
+    this.graphics.use(phoneSprites.body);
+    this.handset = new ex.Actor({
+      name: "Handset " + no,
+      pos: new ex.Vector(0, 0),
+      width: 80,
+      height: 60,
+    });
+    this.handset.graphics.use(phoneSprites.handset);
+
+    this.addChild(this.handset);
+
     this.phone_no = no;
     this.agent = undefined;
     this.call_distribution = [
@@ -96,9 +106,9 @@ export class Phone extends ex.Actor {
     return this.active_call != undefined;
   }
 
-  pickup() {
+  pickup(): Boolean {
     if (!this.is_ringing()) {
-      return;
+      return false;
     }
 
     var game = ex.Engine.useEngine();
@@ -118,7 +128,10 @@ export class Phone extends ex.Actor {
       this.active_call!.color
     );
 
+    //this.removeChild(this.handset);
+
     game.add(this.call_timer);
+    return true;
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
