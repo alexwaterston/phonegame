@@ -34,6 +34,8 @@ export class Agent extends ex.Actor {
   strength: Speciality | undefined;
   weakness: Speciality | undefined;
 
+  state: agent_state = agent_state.REST;
+
   frame: number;
   frames = [
     {
@@ -121,37 +123,48 @@ export class Agent extends ex.Actor {
 
   pickupPhone() {
     this.current_phone?.pickup();
-    //this.removeChild(this.rest_arms);
-    //this.addChild(this.phone_arms);
+    this.state = agent_state.ANSWERING;
+    this.removeChild(this.rest_arms);
+    this.addChild(this.phone_arms);
+  }
+
+  callFinished() {
+    this.state = agent_state.REST;
+    this.removeChild(this.phone_arms);
+    this.addChild(this.rest_arms);
   }
 
   onPreUpdate(engine: ex.Engine, delta: number) {
-    //MOVE LEFT
-    if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].left)) {
-      if (this.current_phone && this.current_phone.phone_no > 0) {
-        const new_phone = this.current_phone.phone_no - 1;
-        if (this.phone_bank[new_phone].agent == undefined) {
-          this.moveToPhone(this.phone_bank[new_phone]);
+    if (this.state === agent_state.REST) {
+      //MOVE LEFT
+      if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].left)) {
+        if (this.current_phone && this.current_phone.phone_no > 0) {
+          //this.state = agent_state.MOVING;
+          const new_phone = this.current_phone.phone_no - 1;
+          if (this.phone_bank[new_phone].agent == undefined) {
+            this.moveToPhone(this.phone_bank[new_phone]);
+          }
         }
       }
-    }
 
-    //MOVE RIGHT
-    if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right)) {
-      if (
-        this.current_phone &&
-        this.current_phone.phone_no < this.phone_bank.length - 1
-      ) {
-        const new_phone = this.current_phone.phone_no + 1;
-        if (this.phone_bank[new_phone].agent == undefined) {
-          this.moveToPhone(this.phone_bank[new_phone]);
+      //MOVE RIGHT
+      if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right)) {
+        if (
+          this.current_phone &&
+          this.current_phone.phone_no < this.phone_bank.length - 1
+        ) {
+          const new_phone = this.current_phone.phone_no + 1;
+          if (this.phone_bank[new_phone].agent == undefined) {
+            this.moveToPhone(this.phone_bank[new_phone]);
+          }
         }
       }
-    }
 
-    // ANSWER CALL
-    if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up)) {
-      this.pickupPhone();
+      // ANSWER CALL
+      if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up)) {
+        this.pickupPhone();
+      }
+    } else if (this.state == agent_state.MOVING) {
     }
   }
 }

@@ -128,7 +128,7 @@ export class Phone extends ex.Actor {
       this.active_call!.color
     );
 
-    //this.removeChild(this.handset);
+    this.removeChild(this.handset);
 
     game.add(this.call_timer);
     return true;
@@ -137,11 +137,13 @@ export class Phone extends ex.Actor {
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
     if (this.call_timer && this.call_timer.isFinished()) {
       engine.remove(this.call_timer);
+      this.agent.callFinished();
       this.call_timer = undefined;
       this.main_game.callAnswered();
       engine.remove(this.active_call!);
       this.active_call = undefined;
       this.activate_call();
+      this.removeChild(this.handset);
     }
   }
 
