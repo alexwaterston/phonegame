@@ -24,6 +24,9 @@ const waterstons_c_phone_arms = require("../assets/waterstons_c_phone_arms.png")
 const waterstons_c_rest_arms = require("../assets/waterstons_c_rest_arms.png");
 const waterstons_c_triangle_body = require("../assets/waterstons_c_triangle_body.png");
 
+const waterstons_icon_health = require("../assets/waterstons_icon_health.png");
+const waterstons_icon_phone_ring = require("../assets/waterstons_icon_phone_ring.png");
+
 const Resources = {
   call_circle: new ex.ImageSource(waterstons_icon_circle),
   call_triangle: new ex.ImageSource(waterstons_icon_triangle),
@@ -50,6 +53,9 @@ const Resources = {
   c_phone_arms: new ex.ImageSource(waterstons_c_phone_arms),
   c_rest_arms: new ex.ImageSource(waterstons_c_rest_arms),
   c_triangle_body: new ex.ImageSource(waterstons_c_triangle_body),
+
+  icon_health: new ex.ImageSource(waterstons_icon_health),
+  icon_phone_ring: new ex.ImageSource(waterstons_icon_phone_ring),
 };
 
 function loadSprite(
@@ -170,6 +176,20 @@ const cFrameSprites = {
   ),
 };
 
+const HEALTH_ICON_SPRITE_SIZE = 50;
+const uiSprites = {
+  icon_health: loadSprite(
+    Resources.icon_health,
+    HEALTH_ICON_SPRITE_SIZE,
+    HEALTH_ICON_SPRITE_SIZE
+  ),
+  icon_phone_ring: loadSprite(
+    Resources.icon_phone_ring,
+    PHONE_SPRITE_SIZE / 2,
+    PHONE_SPRITE_SIZE / 2
+  ),
+};
+
 for (const res in Resources) {
   loader.addResource((Resources as any)[res]);
 }
@@ -182,4 +202,5 @@ export {
   aFrameSprites,
   bFrameSprites,
   cFrameSprites,
+  uiSprites,
 };

@@ -30,11 +30,12 @@ enum agent_state {
 export class Agent extends ex.Actor {
   agent_no: number;
   phone_bank: Phone[];
-  current_phone: Phone | undefined;
-  strength: Speciality | undefined;
-  weakness: Speciality | undefined;
+  current_phone: Phone;
+  strength: Speciality;
+  weakness: Speciality;
 
   state: agent_state = agent_state.REST;
+  state_time: number = 0;
 
   frame: number;
   frames = [
@@ -53,6 +54,11 @@ export class Agent extends ex.Actor {
       triangle_body: cFrameSprites.c_triangle_body,
     },
   ];
+  moving_frames = {
+    circle_body: bFrameSprites.b_circle_body,
+    head_and_legs_and_arms: bFrameSprites.b_head_and_legs_and_arms,
+    triangle_body: bFrameSprites.b_triangle_body,
+  };
 
   rest_arms: ex.Actor;
   phone_arms: ex.Actor;
@@ -86,16 +92,24 @@ export class Agent extends ex.Actor {
     this.addChild(this.rest_arms);
 
     this.frame = agent_no;
-    this.flip();
+    this.flip_frame();
 
     this.agent_no = agent_no;
     this.phone_bank = phone_bank;
-    this.moveToPhone(starting_phone);
+    this.current_phone = starting_phone;
+    this.current_phone.agent = this;
+    this.finishMoveToPhone();
     this.strength = agent_specialties[agent_no].strength;
     this.weakness = agent_specialties[agent_no].weakness;
   }
 
-  flip() {
+  change_state(new_state: agent_state) {
+    //console.log("old state " + this.state + ". new state " + new_state);
+    this.state = new_state;
+    this.state_time = 0;
+  }
+
+  flip_frame() {
     this.frame = (this.frame + 1) % 2;
 
     if (this.agent_no === 0) {
@@ -108,47 +122,70 @@ export class Agent extends ex.Actor {
     this.phone_arms.graphics.use(this.frames[this.frame].phone_arms);
   }
 
+  move_frame() {
+    if (this.agent_no === 0) {
+      this.graphics.use(this.moving_frames.circle_body);
+    } else {
+      this.graphics.use(this.moving_frames.triangle_body);
+    }
+    this.head_and_legs.graphics.use(this.moving_frames.head_and_legs_and_arms);
+    this.rest_arms.graphics.hide();
+    this.phone_arms.graphics.hide();
+  }
+
   moveToPhone(phone: Phone) {
+    const old_x_position = this.current_phone?.pos.x;
+
     if (this.current_phone != undefined) {
       this.current_phone.agent = undefined;
-      if (this.current_phone.call_timer != undefined) {
+      if (this.current_phone.agent) {
         return;
       }
     }
+
     this.current_phone = phone;
     this.current_phone.agent = this;
+    this.pos = ex.vec(
+      old_x_position + (this.current_phone.pos.x - old_x_position) / 2,
+      this.current_phone.pos.y + 120
+    );
+    this.move_frame();
+    this.change_state(agent_state.MOVING);
+  }
+
+  finishMoveToPhone() {
     this.pos = ex.vec(this.current_phone.pos.x, this.current_phone.pos.y + 120);
-    this.flip();
+    this.flip_frame();
+    this.change_state(agent_state.REST);
   }
 
   pickupPhone() {
     this.current_phone?.pickup();
-    this.state = agent_state.ANSWERING;
+    this.change_state(agent_state.ANSWERING);
     this.removeChild(this.rest_arms);
     this.addChild(this.phone_arms);
   }
 
   callFinished() {
-    this.state = agent_state.REST;
+    this.change_state(agent_state.REST);
     this.removeChild(this.phone_arms);
     this.addChild(this.rest_arms);
   }
 
   onPreUpdate(engine: ex.Engine, delta: number) {
+    this.state_time += delta;
     if (this.state === agent_state.REST) {
       //MOVE LEFT
       if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].left)) {
         if (this.current_phone && this.current_phone.phone_no > 0) {
-          //this.state = agent_state.MOVING;
           const new_phone = this.current_phone.phone_no - 1;
           if (this.phone_bank[new_phone].agent == undefined) {
             this.moveToPhone(this.phone_bank[new_phone]);
           }
         }
-      }
-
-      //MOVE RIGHT
-      if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right)) {
+      } else if (
+        engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right)
+      ) {
         if (
           this.current_phone &&
           this.current_phone.phone_no < this.phone_bank.length - 1
@@ -158,13 +195,21 @@ export class Agent extends ex.Actor {
             this.moveToPhone(this.phone_bank[new_phone]);
           }
         }
-      }
-
-      // ANSWER CALL
-      if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up)) {
+      } else if (
+        engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up) &&
+        this.current_phone?.is_ringing()
+      ) {
         this.pickupPhone();
       }
+    } else if (this.state == agent_state.ANSWERING) {
+      if (this.state_time >= 200) {
+        this.current_phone?.callEnded();
+        this.callFinished();
+      }
     } else if (this.state == agent_state.MOVING) {
+      if (this.state_time >= 200) {
+        this.finishMoveToPhone();
+      }
     }
   }
 }

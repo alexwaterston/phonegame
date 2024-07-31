@@ -27,18 +27,9 @@ const game = new Engine({
   width: 1024,
   height: 768,
   displayMode: DisplayMode.FitScreen,
-  backgroundColor: Color.White,
+  backgroundColor: Color.fromRGB(199, 202, 178),
 });
 // end-snippet{create-engine}
-
-game.on("hidden", () => {
-  console.log("pause");
-  game.stop();
-});
-game.on("visible", () => {
-  console.log("start");
-  game.start();
-});
 
 const main: MainGame = new MainGame();
 game.add("Main", main);

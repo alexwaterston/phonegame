@@ -6,18 +6,20 @@ import { TimerBar } from "actors/timer_bar";
 import { ColourBar, BarStatus } from "actors/colour_bar";
 import { EndGameScreen } from "./gameend";
 import { Speciality } from "enums/speciality";
+import { uiSprites } from "../resources";
 
 const NUMBER_OF_PHONES = 5;
 
 export class MainGame extends ex.Scene {
   timerBar: TimerBar | undefined;
-  overallSatisfactionBar: ColourBar | undefined;
+  lives: number = 3;
 
   overallScore: number = 0;
   overallScoreText: ex.Text | undefined;
   phones: Phone[] = [];
   agent1: Agent | undefined;
   agent2: Agent | undefined;
+  hearts: ex.Actor[] = [];
   call_manager: ex.Timer | undefined;
 
   next_call_left: number = 1;
@@ -28,7 +30,6 @@ export class MainGame extends ex.Scene {
    */
   public onInitialize(engine: ex.Engine) {
     // initialize scene actors
-
     for (let i = 0; i < NUMBER_OF_PHONES; i++) {
       this.phones.push(
         new Phone(
@@ -54,21 +55,20 @@ export class MainGame extends ex.Scene {
     this.call_manager = new ex.Timer({
       fcn: () => {
         const middle_phone = Math.ceil(NUMBER_OF_PHONES / 2);
-        this.phones[this.next_call_left].add_random_call();
-        this.phones[this.next_call_right].add_random_call();
-        this.next_call_left = random.integer(0, middle_phone);
-        this.next_call_right = random.integer(
-          middle_phone,
-          NUMBER_OF_PHONES - 1
-        );
-        //console.log("next calls: " + this.next_call_left + ", ", this.next_call_right);
-        //this.phones[this.next_call_left].highlight_next_call();
-        //this.phones[this.next_call_right].highlight_next_call();
-        var min_speed = 500;
+        random.pickOne(this.phones).add_random_call();
+        //this.phones[this.next_call_right].add_random_call();
+        //this.next_call_left = random.integer(0, middle_phone);
+        //this.next_call_right = random.integer(
+        //middle_phone,
+        //NUMBER_OF_PHONES - 1
+        //);
+        var min_speed = 1000;
         if (this.timerBar!.value < 10000) {
-          min_speed = 200;
-        } else if (this.timerBar!.value < 40000) {
           min_speed = 300;
+        } else if (this.timerBar!.value < 30000) {
+          min_speed = 500;
+        } else if (this.timerBar!.value < 50000) {
+          min_speed = 700;
         }
         this.call_manager!.reset(
           Math.max(this.call_manager!.interval - 200, min_speed)
@@ -91,19 +91,22 @@ export class MainGame extends ex.Scene {
       60 * 1000,
       ex.Color.Black
     );
-
-    this.overallSatisfactionBar = new ColourBar(
-      (engine.drawWidth - (engine.drawWidth - 100)) / 2,
-      80,
-      engine.drawWidth - 100,
-      20,
-      3
-    );
-
-    this.overallSatisfactionBar.setValue(3);
-
-    this.add(this.overallSatisfactionBar);
     this.add(this.timerBar);
+
+    for (let i = 0; i < this.lives; i++) {
+      this.hearts.push(
+        new ex.Actor({
+          name: "Heart " + i,
+          pos: new ex.Vector(100 + 50 * i, 100),
+          width: 50,
+          height: 50,
+        })
+      );
+    }
+    this.hearts.forEach((heart) => {
+      heart.graphics.use(uiSprites.icon_health);
+      this.add(heart);
+    });
 
     this.overallScoreText = new ex.Text({
       text: "Score!",
@@ -122,10 +125,7 @@ export class MainGame extends ex.Scene {
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
-    if (
-      this.timerBar?.isFinished() ||
-      this.overallSatisfactionBar?.value == 0
-    ) {
+    if (this.timerBar?.isFinished() || this.lives == 0) {
       var es = engine.scenes["GameEnd"];
       (es as EndGameScreen).score = this.overallScore;
       engine.goToScene("GameEnd");
@@ -133,7 +133,8 @@ export class MainGame extends ex.Scene {
   }
 
   callFailed(): void {
-    this.overallSatisfactionBar?.decrement(1);
+    this.lives -= 1;
+    this.hearts[this.lives].graphics.hide();
   }
 
   updateScore() {
