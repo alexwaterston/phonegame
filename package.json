@@ -11,16 +11,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/excaliburjs/template-ts-parcel.git"
-  },
   "author": "",
-  "license": "BSD-2",
-  "bugs": {
-    "url": "https://github.com/excaliburjs/template-ts-parcel/issues"
-  },
-  "homepage": "https://github.com/excaliburjs/template-ts-parcel#readme",
   "assetsPath": "static/",
   "devDependencies": {
     "@excaliburjs/testing": "0.25.1",

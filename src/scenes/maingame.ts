@@ -54,7 +54,7 @@ export class MainGame extends ex.Scene {
 
     this.call_manager = new ex.Timer({
       fcn: () => {
-        const middle_phone = Math.ceil(NUMBER_OF_PHONES / 2);
+        //const middle_phone = Math.ceil(NUMBER_OF_PHONES / 2);
         random.pickOne(this.phones).add_random_call();
         //this.phones[this.next_call_right].add_random_call();
         //this.next_call_left = random.integer(0, middle_phone);
@@ -109,12 +109,12 @@ export class MainGame extends ex.Scene {
     });
 
     this.overallScoreText = new ex.Text({
-      text: "Score!",
+      text: "0",
       font: new ex.Font({ size: 60 }),
     });
 
     const overallScore = new ex.Actor({
-      pos: ex.vec(100, 200),
+      pos: ex.vec(engine.drawWidth - 100, 100),
     });
 
     overallScore.graphics.use(this.overallScoreText);
