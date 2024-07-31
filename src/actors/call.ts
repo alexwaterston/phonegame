@@ -44,6 +44,10 @@ export class Call extends ex.Actor {
     this.phone = phone;
   }
 
+  makeUrgent(): void {
+    this.alert.graphics.visible = true;
+  }
+
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
     super.onPreUpdate(engine, delta);
   }

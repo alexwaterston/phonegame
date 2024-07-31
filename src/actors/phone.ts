@@ -23,7 +23,7 @@ export class Phone extends ex.Actor {
   public handset: ex.Actor;
   public ring_icon: ex.Actor;
   public urgent_icon: ex.Actor;
-  public is_urgent: false;
+  public is_urgent: boolean = false;
 
   time_to_blink = BLINK_RATE;
   time_to_fail = CALL_FAIL_TIME;
@@ -166,6 +166,7 @@ export class Phone extends ex.Actor {
         this.time_to_fail -= delta;
       }
       if (this.time_to_blink <= 0) {
+        this.handset.rotation = ex.toRadians(ex.randomInRange(-10, 10));
         if (this.time_to_fail <= URGENT_CALL_TIME) {
           this.handset.rotation = ex.toRadians(ex.randomInRange(-10, 10));
           if (this.time_to_fail <= URGENT_URGENT_CALL_TIME) {
