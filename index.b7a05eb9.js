@@ -30052,7 +30052,7 @@ class MainGame extends _excalibur.Scene {
         const random = new _excalibur.Random();
         this.call_manager = new _excalibur.Timer({
             fcn: ()=>{
-                const middle_phone = Math.ceil(NUMBER_OF_PHONES / 2);
+                //const middle_phone = Math.ceil(NUMBER_OF_PHONES / 2);
                 random.pickOne(this.phones).add_random_call();
                 //this.phones[this.next_call_right].add_random_call();
                 //this.next_call_left = random.integer(0, middle_phone);
@@ -30089,13 +30089,13 @@ class MainGame extends _excalibur.Scene {
             this.add(heart);
         });
         this.overallScoreText = new _excalibur.Text({
-            text: "Score!",
+            text: "0",
             font: new _excalibur.Font({
                 size: 60
             })
         });
         const overallScore = new _excalibur.Actor({
-            pos: _excalibur.vec(100, 200)
+            pos: _excalibur.vec(engine.drawWidth - 100, 100)
         });
         overallScore.graphics.use(this.overallScoreText);
         this.add(overallScore);
