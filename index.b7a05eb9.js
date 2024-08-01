@@ -586,6 +586,7 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"jeorp":[function(require,module,exports) {
 var _excalibur = require("excalibur");
 var _maingame = require("scenes/maingame");
+var _resources = require("./resources");
 // start-snippet{create-engine}
 // Create an instance of the engine.
 // I'm specifying that the game be 800 pixels wide by 600 pixels tall.
@@ -600,10 +601,10 @@ const game = new (0, _excalibur.Engine)({
 const main = new (0, _maingame.MainGame)();
 game.add("Main", main);
 game.goToScene("Main");
-game.start();
+game.start((0, _resources.loader));
 console.log("start");
 
-},{"excalibur":"bDskv","scenes/maingame":"eCQMI"}],"bDskv":[function(require,module,exports) {
+},{"excalibur":"bDskv","scenes/maingame":"eCQMI","./resources":"hEdRW"}],"bDskv":[function(require,module,exports) {
 /*!
  * excalibur - 0.29.3 - 2024-5-5
  * https://github.com/excaliburjs/Excalibur
