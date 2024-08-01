@@ -36,7 +36,7 @@ export class Call extends ex.Actor {
     });
     this.alert.graphics.use(uiSprites.icon_phone_ring);
     this.addChild(this.alert);
-    //this.alert.graphics.visible = false;
+    this.alert.graphics.visible = false;
 
     const random = new ex.Random();
 
