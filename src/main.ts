@@ -35,5 +35,5 @@ const main: MainGame = new MainGame();
 game.add("Main", main);
 game.goToScene("Main");
 
-game.start();
+game.start(loader);
 console.log("start");
