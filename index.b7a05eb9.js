@@ -592,8 +592,8 @@ var _resources = require("./resources");
 // I'm specifying that the game be 800 pixels wide by 600 pixels tall.
 // If no dimensions are specified the game will fit to the screen.
 const game = new (0, _excalibur.Engine)({
-    width: 1024,
-    height: 768,
+    //width: 1024,
+    //height: 768,
     displayMode: (0, _excalibur.DisplayMode).FitScreen,
     backgroundColor: (0, _excalibur.Color).fromRGB(199, 202, 178)
 });
@@ -30134,7 +30134,7 @@ class MainGame extends _excalibur.Scene {
     }
 }
 
-},{"excalibur":"bDskv","actors/phone":"dskcj","actors/agent":"wfa0m","actors/timer_bar":"72EnI","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./gameend":"8ZkUr","../resources":"hEdRW"}],"dskcj":[function(require,module,exports) {
+},{"excalibur":"bDskv","actors/phone":"dskcj","actors/agent":"wfa0m","actors/timer_bar":"72EnI","./gameend":"8ZkUr","../resources":"hEdRW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dskcj":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Phone", ()=>Phone);
@@ -30302,7 +30302,7 @@ class Phone extends _excalibur.Actor {
     }
 }
 
-},{"excalibur":"bDskv","./call":"cKim3","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","enums/speciality":"gPurE","../resources":"hEdRW"}],"cKim3":[function(require,module,exports) {
+},{"excalibur":"bDskv","./call":"cKim3","enums/speciality":"gPurE","../resources":"hEdRW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"cKim3":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Call", ()=>Call);
@@ -30326,7 +30326,7 @@ class Call extends _excalibur.Actor {
         });
         this.alert.graphics.use((0, _resources.uiSprites).icon_phone_ring);
         this.addChild(this.alert);
-        //this.alert.graphics.visible = false;
+        this.alert.graphics.visible = false;
         const random = new _excalibur.Random();
         this.speciality = speciality;
         this.phone = phone;
@@ -30348,7 +30348,7 @@ class Call extends _excalibur.Actor {
     }
 }
 
-},{"excalibur":"bDskv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","enums/speciality":"gPurE","../resources":"hEdRW"}],"gPurE":[function(require,module,exports) {
+},{"excalibur":"bDskv","enums/speciality":"gPurE","../resources":"hEdRW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gPurE":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Speciality", ()=>Speciality);
@@ -30465,7 +30465,7 @@ const uiSprites = {
 };
 for(const res in Resources)loader.addResource(Resources[res]);
 
-},{"excalibur":"bDskv","372cdd40c49af570":"7wPqx","6cc54d35491a2895":"7FpEs","1a1d7a54dad72317":"5JG66","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","644a367cc9425abc":"jGyvz","3a5caa9882cdbb60":"jMaPn","59e530f4b0099e6d":"cNQgK","3d5c41f8c077abec":"86D3G","1525cffb593b0b9a":"4FCfK","97b49bb47daf9f51":"LTJmO","918cefc4344d743e":"6BZnO","a281e198ac465477":"gFC0G","d55ca72fcbe2d4e3":"fTqnF","44d7b487ffb0e618":"bJ7aL","67f7edbd0c49365b":"7tg7S","830bba1317186094":"fFc2Z","3d718f7126ee8103":"hj7HA","28b9174338fdb681":"lXSOh","7e31874c70278615":"kzzah","82ce4e661f8fe4eb":"mvtuP","78c27bffe8db4a3c":"aV4M2","265418dfe3740068":"e92qm"}],"7wPqx":[function(require,module,exports) {
+},{"excalibur":"bDskv","372cdd40c49af570":"7wPqx","6cc54d35491a2895":"7FpEs","1a1d7a54dad72317":"5JG66","644a367cc9425abc":"jGyvz","3a5caa9882cdbb60":"jMaPn","59e530f4b0099e6d":"cNQgK","3d5c41f8c077abec":"86D3G","1525cffb593b0b9a":"4FCfK","97b49bb47daf9f51":"LTJmO","918cefc4344d743e":"6BZnO","a281e198ac465477":"gFC0G","d55ca72fcbe2d4e3":"fTqnF","82ce4e661f8fe4eb":"mvtuP","44d7b487ffb0e618":"bJ7aL","67f7edbd0c49365b":"7tg7S","830bba1317186094":"fFc2Z","3d718f7126ee8103":"hj7HA","28b9174338fdb681":"lXSOh","7e31874c70278615":"kzzah","78c27bffe8db4a3c":"aV4M2","265418dfe3740068":"e92qm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7wPqx":[function(require,module,exports) {
 module.exports = require("b87902db494eab6a").getBundleURL("aNMIV") + "waterstons_icon_circle.9e860f1d.png" + "?" + Date.now();
 
 },{"b87902db494eab6a":"lgJ39"}],"lgJ39":[function(require,module,exports) {
@@ -30536,7 +30536,10 @@ module.exports = require("9576c15b7be32807").getBundleURL("aNMIV") + "waterstons
 },{"9576c15b7be32807":"lgJ39"}],"fTqnF":[function(require,module,exports) {
 module.exports = require("967023fd803a9887").getBundleURL("aNMIV") + "waterstons_b_circle_body.8671ab1f.png" + "?" + Date.now();
 
-},{"967023fd803a9887":"lgJ39"}],"bJ7aL":[function(require,module,exports) {
+},{"967023fd803a9887":"lgJ39"}],"mvtuP":[function(require,module,exports) {
+module.exports = require("870e67325a416c46").getBundleURL("aNMIV") + "waterstons_b_head_and_legs_and_arms.ecb7d26c.png" + "?" + Date.now();
+
+},{"870e67325a416c46":"lgJ39"}],"bJ7aL":[function(require,module,exports) {
 module.exports = require("c210fefab1161f4b").getBundleURL("aNMIV") + "waterstons_b_triangle_body.04a2c4d0.png" + "?" + Date.now();
 
 },{"c210fefab1161f4b":"lgJ39"}],"7tg7S":[function(require,module,exports) {
@@ -30554,10 +30557,7 @@ module.exports = require("1f692264fa8c0635").getBundleURL("aNMIV") + "waterstons
 },{"1f692264fa8c0635":"lgJ39"}],"kzzah":[function(require,module,exports) {
 module.exports = require("2022cdd64c4b283d").getBundleURL("aNMIV") + "waterstons_c_triangle_body.d30ffe05.png" + "?" + Date.now();
 
-},{"2022cdd64c4b283d":"lgJ39"}],"mvtuP":[function(require,module,exports) {
-module.exports = require("870e67325a416c46").getBundleURL("aNMIV") + "waterstons_b_head_and_legs_and_arms.ecb7d26c.png" + "?" + Date.now();
-
-},{"870e67325a416c46":"lgJ39"}],"aV4M2":[function(require,module,exports) {
+},{"2022cdd64c4b283d":"lgJ39"}],"aV4M2":[function(require,module,exports) {
 module.exports = require("ac90687accd4fc20").getBundleURL("aNMIV") + "waterstons_icon_health.8180cbf2.png" + "?" + Date.now();
 
 },{"ac90687accd4fc20":"lgJ39"}],"e92qm":[function(require,module,exports) {
@@ -30734,7 +30734,7 @@ class Agent extends _excalibur.Actor {
     }
 }
 
-},{"excalibur":"bDskv","enums/speciality":"gPurE","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../resources":"hEdRW"}],"72EnI":[function(require,module,exports) {
+},{"excalibur":"bDskv","enums/speciality":"gPurE","../resources":"hEdRW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"72EnI":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "TimerBar", ()=>TimerBar);
