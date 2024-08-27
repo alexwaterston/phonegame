@@ -5,7 +5,7 @@
   "description": "",
   "scripts": {
     "start": "parcel serve index.html",
-    "build": "parcel build ./index.html --dist-dir ./dist --public-url ./",
+    "build": "parcel build ./index.html --dist-dir ./dist --public-url ./phonegame",
     "typecheck": "tsc -p . --noEmit",
     "test": "npm run build && ex-test -d ./dist -t ./test/test.js",
     "predeploy": "npm run build",
