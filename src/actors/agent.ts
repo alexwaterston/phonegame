@@ -1,7 +1,14 @@
 import * as ex from "excalibur";
 import { Phone } from "./phone";
 import { Speciality } from "enums/speciality";
-import { aFrameSprites, bFrameSprites, cFrameSprites } from "../resources";
+import {
+  aFrameSprites,
+  bFrameSprites,
+  cFrameSprites,
+  failFrameSprites,
+} from "../resources";
+import { fail } from "excalibur/build/dist/Util/Util";
+import { MainGame } from "scenes/maingame";
 
 const agent_colours = [ex.Color.Red, ex.Color.Blue];
 const agent_keys = [
@@ -25,6 +32,7 @@ enum agent_state {
   REST,
   MOVING,
   ANSWERING,
+  FAILING,
 }
 
 export class Agent extends ex.Actor {
@@ -59,9 +67,13 @@ export class Agent extends ex.Actor {
     head_and_legs_and_arms: bFrameSprites.b_head_and_legs_and_arms,
     triangle_body: bFrameSprites.b_triangle_body,
   };
+  fail_frames = {
+    circle_body: failFrameSprites.fail_circle,
+    head_and_legs_and_arms: failFrameSprites.fail_head_and_legs,
+    triangle_body: failFrameSprites.fail_triangle,
+  };
 
-  rest_arms: ex.Actor;
-  phone_arms: ex.Actor;
+  arms: ex.Actor;
   head_and_legs: ex.Actor;
 
   constructor(starting_phone: Phone, agent_no: number, phone_bank: Phone[]) {
@@ -75,13 +87,7 @@ export class Agent extends ex.Actor {
       width: 100,
       height: 100,
     });
-    this.rest_arms = new ex.Actor({
-      name: "rest_arms " + agent_no,
-      pos: new ex.Vector(0, 0),
-      width: 100,
-      height: 100,
-    });
-    this.phone_arms = new ex.Actor({
+    this.arms = new ex.Actor({
       name: "rest_arms " + agent_no,
       pos: new ex.Vector(0, 0),
       width: 100,
@@ -89,7 +95,7 @@ export class Agent extends ex.Actor {
     });
 
     this.addChild(this.head_and_legs);
-    this.addChild(this.rest_arms);
+    this.addChild(this.arms);
 
     this.frame = agent_no;
     this.flip_frame();
@@ -111,15 +117,18 @@ export class Agent extends ex.Actor {
 
   flip_frame() {
     this.frame = (this.frame + 1) % 2;
+    this.rest_frame();
+  }
 
+  rest_frame() {
     if (this.agent_no === 0) {
       this.graphics.use(this.frames[this.frame].circle_body);
     } else {
       this.graphics.use(this.frames[this.frame].triangle_body);
     }
     this.head_and_legs.graphics.use(this.frames[this.frame].head_and_legs);
-    this.rest_arms.graphics.use(this.frames[this.frame].rest_arms);
-    this.phone_arms.graphics.use(this.frames[this.frame].phone_arms);
+    this.arms.graphics.use(this.frames[this.frame].rest_arms);
+    //this.phone_arms.graphics.use(this.frames[this.frame].phone_arms);
   }
 
   move_frame() {
@@ -129,8 +138,27 @@ export class Agent extends ex.Actor {
       this.graphics.use(this.moving_frames.triangle_body);
     }
     this.head_and_legs.graphics.use(this.moving_frames.head_and_legs_and_arms);
-    this.rest_arms.graphics.hide();
-    this.phone_arms.graphics.hide();
+    this.arms.graphics.hide();
+  }
+
+  fail_frame() {
+    if (this.agent_no === 0) {
+      this.graphics.use(this.fail_frames.circle_body);
+    } else {
+      this.graphics.use(this.fail_frames.triangle_body);
+    }
+    this.head_and_legs.graphics.use(this.fail_frames.head_and_legs_and_arms);
+    this.arms.graphics.hide();
+  }
+
+  pickup_frame() {
+    if (this.agent_no === 0) {
+      this.graphics.use(this.frames[this.frame].circle_body);
+    } else {
+      this.graphics.use(this.frames[this.frame].triangle_body);
+    }
+    this.head_and_legs.graphics.use(this.frames[this.frame].head_and_legs);
+    this.arms.graphics.use(this.frames[this.frame].phone_arms);
   }
 
   moveToPhone(phone: Phone) {
@@ -162,14 +190,18 @@ export class Agent extends ex.Actor {
   pickupPhone() {
     this.current_phone?.pickup();
     this.change_state(agent_state.ANSWERING);
-    this.removeChild(this.rest_arms);
-    this.addChild(this.phone_arms);
+    this.pickup_frame();
+  }
+
+  pickupWrongPhone() {
+    this.current_phone?.pickup();
+    this.change_state(agent_state.FAILING);
+    this.fail_frame();
   }
 
   callFinished() {
     this.change_state(agent_state.REST);
-    this.removeChild(this.phone_arms);
-    this.addChild(this.rest_arms);
+    this.rest_frame();
   }
 
   onPreUpdate(engine: ex.Engine, delta: number) {
@@ -199,11 +231,21 @@ export class Agent extends ex.Actor {
         engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up) &&
         this.current_phone?.is_ringing()
       ) {
-        this.pickupPhone();
+        if (this.current_phone?.active_call?.speciality === this.weakness) {
+          this.pickupWrongPhone();
+        } else {
+          this.pickupPhone();
+        }
       }
     } else if (this.state == agent_state.ANSWERING) {
       if (this.state_time >= 200) {
         this.current_phone?.callEnded();
+        this.callFinished();
+      }
+    } else if (this.state == agent_state.FAILING) {
+      if (this.state_time >= 1000) {
+        this.current_phone?.callEnded();
+        (this.scene as MainGame).callFailed();
         this.callFinished();
       }
     } else if (this.state == agent_state.MOVING) {

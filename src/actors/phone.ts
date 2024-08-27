@@ -142,12 +142,7 @@ export class Phone extends ex.Actor {
       return false;
     }
 
-    var game = ex.Engine.useEngine();
-
     this.active_call?.answer();
-    if (this.active_call?.speciality === this.agent?.weakness) {
-      this.main_game.callFailed();
-    }
 
     this.handset.graphics.visible = false;
 

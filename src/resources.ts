@@ -24,6 +24,10 @@ const waterstons_c_phone_arms = require("../assets/waterstons_c_phone_arms.png")
 const waterstons_c_rest_arms = require("../assets/waterstons_c_rest_arms.png");
 const waterstons_c_triangle_body = require("../assets/waterstons_c_triangle_body.png");
 
+const waterstons_fail_circle = require("../assets/waterstons_fail_circle.png");
+const waterstons_fail_head_and_legs = require("../assets/waterstons_fail_head_and_legs.png");
+const waterstons_fail_triangle = require("../assets/waterstons_fail_triangle.png");
+
 const waterstons_icon_health = require("../assets/waterstons_icon_health.png");
 const waterstons_icon_phone_ring = require("../assets/waterstons_icon_phone_ring.png");
 
@@ -56,6 +60,10 @@ const Resources = {
 
   icon_health: new ex.ImageSource(waterstons_icon_health),
   icon_phone_ring: new ex.ImageSource(waterstons_icon_phone_ring),
+
+  fail_circle: new ex.ImageSource(waterstons_fail_circle),
+  fail_head_and_legs: new ex.ImageSource(waterstons_fail_head_and_legs),
+  fail_triangle: new ex.ImageSource(waterstons_fail_triangle),
 };
 
 function loadSprite(
@@ -176,6 +184,24 @@ const cFrameSprites = {
   ),
 };
 
+const failFrameSprites = {
+  fail_circle: loadSprite(
+    Resources.fail_circle,
+    AGENT_SPRITE_SIZE,
+    AGENT_SPRITE_SIZE
+  ),
+  fail_head_and_legs: loadSprite(
+    Resources.fail_head_and_legs,
+    AGENT_SPRITE_SIZE,
+    AGENT_SPRITE_SIZE
+  ),
+  fail_triangle: loadSprite(
+    Resources.fail_triangle,
+    AGENT_SPRITE_SIZE,
+    AGENT_SPRITE_SIZE
+  ),
+};
+
 const HEALTH_ICON_SPRITE_SIZE = 50;
 const uiSprites = {
   icon_health: loadSprite(
@@ -202,5 +228,6 @@ export {
   aFrameSprites,
   bFrameSprites,
   cFrameSprites,
+  failFrameSprites,
   uiSprites,
 };

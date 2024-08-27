@@ -24,8 +24,8 @@ import { loader } from "./resources";
 // If no dimensions are specified the game will fit to the screen.
 
 const game = new Engine({
-  width: 1024,
-  height: 768,
+  //width: 1024,
+  //height: 768,
   displayMode: DisplayMode.FitScreen,
   backgroundColor: Color.fromRGB(199, 202, 178),
 });
