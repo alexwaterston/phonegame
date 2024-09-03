@@ -6,6 +6,7 @@ import {
   bFrameSprites,
   cFrameSprites,
   failFrameSprites,
+  Resources,
 } from "../resources";
 import { MainGame } from "scenes/maingame";
 
@@ -189,12 +190,14 @@ export class Agent extends ex.Actor {
   pickupPhone() {
     this.current_phone?.pickup();
     this.change_state(agent_state.ANSWERING);
+    Resources.sfx_success.play(1);
     this.pickup_frame();
   }
 
   pickupWrongPhone() {
     this.current_phone?.pickup();
     this.change_state(agent_state.FAILING);
+    Resources.sfx_fail.play(1);
     this.fail_frame();
   }
 
