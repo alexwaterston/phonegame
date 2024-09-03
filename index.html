@@ -3,8 +3,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Super Service Desk Dash</title>
+
+    <style>
+      .container {
+        width: 1280px;
+        height: 720px;
+        background-image: url(/assets/Waterstons_game_and_watch_frame.png);
+        background-size: cover;
+      }
+
+      .gaw-header {
+        width: 100%;
+        height: 23%;
+      }
+
+      .gaw-body {
+        width: 100%;
+        height: 54.5%;
+      }
+
+      .gaw-sides {
+        width: 27%;
+      }
+
+      .fullSize {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
+    <main>
+      <div class="container">
+        <table class="fullSize">
+          <tbody class="fullSize">
+            <tr class="gaw-header">
+              <!-- HEADER OF GAME AND WATCH -->
+            </tr>
+            <tr class="gaw-body">
+              <!-- MIDDLE OF GAME AND WATCH -->
+              <td class="gaw-sides"><!-- LEFT --></td>
+              <td><canvas id="game" style="border-radius: 3%"></canvas></td>
+              <td class="gaw-sides"><!-- RIGHT --></td>
+            </tr>
+            <tr class="gaw-header">
+              <!-- FOOTER OF GAME AND WATCH -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
     <script type="module" src="src/main.ts"></script>
   </body>
 </html>
