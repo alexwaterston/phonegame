@@ -239,7 +239,7 @@ export class Agent extends ex.Actor {
         (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up) ||
           engine.input.gamepads
             .at(this.agent_no)
-            .wasButtonPressed(ex.Buttons.Face1)) &&
+            .wasButtonPressed(ex.Buttons.Face2)) &&
         this.current_phone?.is_ringing()
       ) {
         if (this.current_phone?.active_call?.speciality === this.weakness) {
