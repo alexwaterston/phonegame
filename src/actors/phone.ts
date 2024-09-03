@@ -80,7 +80,7 @@ export class Phone extends ex.Actor {
   onInitialize(engine: ex.Engine<any>): void {
     this.main_game = engine.currentScene as MainGame;
     const number_of_phones = this.main_game.phones.length;
-    const middle_phone = Math.ceil(number_of_phones / 2);
+    const middle_phone = Math.floor(number_of_phones / 2);
     if (this.phone_no == middle_phone) {
       this.call_distribution = [
         Speciality.Printers,
@@ -153,7 +153,7 @@ export class Phone extends ex.Actor {
     if (this.is_ringing()) {
       if (this.time_to_fail <= 0) {
         this.callEnded();
-        this.main_game.callFailed();
+        this.main_game.callFailed(this.agent!.agent_no);
       }
 
       this.time_to_blink -= delta;
@@ -188,7 +188,7 @@ export class Phone extends ex.Actor {
   }
 
   callEnded() {
-    this.main_game.callAnswered();
+    this.main_game.callAnswered(this.agent!.agent_no);
     this.main_game.remove(this.active_call!);
     this.active_call = undefined;
     this.activate_call();

@@ -14,6 +14,8 @@ export class MainGame extends ex.Scene {
   timerBar: TimerBar | undefined;
   lives: number = 3;
 
+  callsFailed: number[] = [0, 0];
+  callsAnswered: number[] = [0, 0];
   overallScore: number = 0;
   overallScoreText: ex.Text | undefined;
   phones: Phone[] = [];
@@ -120,21 +122,26 @@ export class MainGame extends ex.Scene {
     overallScore.graphics.use(this.overallScoreText);
     this.add(overallScore);
 
-    const es: EndGameScreen = new EndGameScreen();
-    engine.add("GameEnd", es);
+    if (!engine.scenes["GameEnd"]) {
+      const es: EndGameScreen = new EndGameScreen();
+      engine.add("GameEnd", es);
+    }
   }
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
     if (this.timerBar?.isFinished() || this.lives == 0) {
       var es = engine.scenes["GameEnd"];
       (es as EndGameScreen).score = this.overallScore;
+      (es as EndGameScreen).callsAnswered = this.callsAnswered;
+      (es as EndGameScreen).callsFailed = this.callsFailed;
       engine.goToScene("GameEnd");
     }
   }
 
-  callFailed(): void {
+  callFailed(agent: number): void {
     this.lives -= 1;
     this.hearts[this.lives].graphics.hide();
+    this.callsFailed[agent] += 1;
   }
 
   updateScore() {
@@ -143,11 +150,11 @@ export class MainGame extends ex.Scene {
 
   incrementScore(by: number) {
     this.overallScore += by;
-
     this.updateScore();
   }
 
-  callAnswered(): void {
+  callAnswered(agent: number): void {
     this.incrementScore(1);
+    this.callsAnswered[agent] += 1;
   }
 }

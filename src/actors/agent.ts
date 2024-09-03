@@ -7,7 +7,6 @@ import {
   cFrameSprites,
   failFrameSprites,
 } from "../resources";
-import { fail } from "excalibur/build/dist/Util/Util";
 import { MainGame } from "scenes/maingame";
 
 const agent_colours = [ex.Color.Red, ex.Color.Blue];
@@ -205,10 +204,16 @@ export class Agent extends ex.Actor {
   }
 
   onPreUpdate(engine: ex.Engine, delta: number) {
+    //console.log(engine.input.gamepads);
     this.state_time += delta;
     if (this.state === agent_state.REST) {
       //MOVE LEFT
-      if (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].left)) {
+      if (
+        engine.input.keyboard.wasPressed(agent_keys[this.agent_no].left) ||
+        engine.input.gamepads
+          .at(this.agent_no)
+          .wasButtonPressed(ex.Buttons.DpadLeft)
+      ) {
         if (this.current_phone && this.current_phone.phone_no > 0) {
           const new_phone = this.current_phone.phone_no - 1;
           if (this.phone_bank[new_phone].agent == undefined) {
@@ -216,7 +221,10 @@ export class Agent extends ex.Actor {
           }
         }
       } else if (
-        engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right)
+        engine.input.keyboard.wasPressed(agent_keys[this.agent_no].right) ||
+        engine.input.gamepads
+          .at(this.agent_no)
+          .wasButtonPressed(ex.Buttons.DpadRight)
       ) {
         if (
           this.current_phone &&
@@ -228,7 +236,10 @@ export class Agent extends ex.Actor {
           }
         }
       } else if (
-        engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up) &&
+        (engine.input.keyboard.wasPressed(agent_keys[this.agent_no].up) ||
+          engine.input.gamepads
+            .at(this.agent_no)
+            .wasButtonPressed(ex.Buttons.Face1)) &&
         this.current_phone?.is_ringing()
       ) {
         if (this.current_phone?.active_call?.speciality === this.weakness) {
@@ -245,7 +256,7 @@ export class Agent extends ex.Actor {
     } else if (this.state == agent_state.FAILING) {
       if (this.state_time >= 1000) {
         this.current_phone?.callEnded();
-        (this.scene as MainGame).callFailed();
+        (this.scene as MainGame).callFailed(this.agent_no);
         this.callFinished();
       }
     } else if (this.state == agent_state.MOVING) {

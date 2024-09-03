@@ -32,6 +32,7 @@ const game = new Engine({
 // end-snippet{create-engine}
 
 const main: MainGame = new MainGame();
+game.input.gamepads.enabled = true;
 game.add("Main", main);
 game.goToScene("Main");
 
