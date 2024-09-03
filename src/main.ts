@@ -25,7 +25,7 @@ import { loader } from "./resources";
 
 const game = new Engine({
   canvasElementId: "game",
-  displayMode: DisplayMode.FitContainerAndFill,
+  displayMode: DisplayMode.FitContainer,
   backgroundColor: Color.fromRGB(199, 202, 178),
 });
 // end-snippet{create-engine}
