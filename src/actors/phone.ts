@@ -4,12 +4,15 @@ import { Agent } from "./agent";
 import { TimerBar } from "./timer_bar";
 import { MainGame } from "scenes/maingame";
 import { Speciality } from "enums/speciality";
-import { phoneSprites, uiSprites } from "../resources";
+import { phoneSprites, uiSprites, Resources } from "../resources";
 
 const BLINK_RATE = 350;
-const CALL_FAIL_TIME = 12000;
-const URGENT_CALL_TIME = 7000;
-const URGENT_URGENT_CALL_TIME = 2000;
+const WAIT_TIME = 1000;
+enum PhoneState {
+  OFF,
+  RING,
+  WAIT,
+}
 
 export class Phone extends ex.Actor {
   public active_call: Call | undefined = undefined;
@@ -26,7 +29,8 @@ export class Phone extends ex.Actor {
   public is_urgent: boolean = false;
 
   time_to_blink = BLINK_RATE;
-  time_to_fail = CALL_FAIL_TIME;
+  wait_time = WAIT_TIME;
+  state = PhoneState.OFF;
 
   constructor(x: number, y: number, no: number) {
     super({
@@ -151,33 +155,15 @@ export class Phone extends ex.Actor {
 
   onPreUpdate(engine: ex.Engine<any>, delta: number): void {
     if (this.is_ringing()) {
-      if (this.time_to_fail <= 0) {
-        this.callEnded();
-        this.main_game.callFailed(this.agent!.agent_no);
-      }
-
       this.time_to_blink -= delta;
-      if (this.is_urgent) {
-        this.time_to_fail -= delta;
-      }
       if (this.time_to_blink <= 0) {
+        //Resources.sfx_ring.play();
+
         this.handset.rotation = ex.toRadians(ex.randomInRange(-10, 10));
-        if (this.time_to_fail <= URGENT_CALL_TIME) {
-          this.handset.rotation = ex.toRadians(ex.randomInRange(-10, 10));
-          if (this.time_to_fail <= URGENT_URGENT_CALL_TIME) {
-            this.rotation = ex.toRadians(ex.randomInRange(-10, 10));
-          }
-        }
         if (this.ring_icon.graphics.visible) {
           this.ring_icon.graphics.visible = false;
-          if (this.time_to_fail <= URGENT_CALL_TIME) {
-            this.urgent_icon.graphics.visible = false;
-          }
         } else {
           this.ring_icon.graphics.visible = true;
-          if (this.time_to_fail <= URGENT_CALL_TIME) {
-            this.urgent_icon.graphics.visible = true;
-          }
         }
         this.time_to_blink = BLINK_RATE;
       }
@@ -195,12 +181,7 @@ export class Phone extends ex.Actor {
     this.handset.graphics.visible = true;
     this.handset.rotation = ex.toRadians(ex.randomInRange(-5, 5));
     this.rotation = 0;
-    this.time_to_fail = CALL_FAIL_TIME;
     this.urgent_icon.graphics.visible = false;
-  }
-
-  highlight_next_call() {
-    this.color = ex.Color.Rose;
   }
 
   activate_call() {
@@ -208,7 +189,6 @@ export class Phone extends ex.Actor {
       this.active_call = this.call_queue.shift();
       this.active_call!.activate();
       this.call_queue.forEach((c) => c.move_up());
-      this.time_to_fail = CALL_FAIL_TIME;
     }
   }
 }

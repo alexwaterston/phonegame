@@ -31,6 +31,11 @@ const waterstons_fail_triangle = require("../assets/waterstons_fail_triangle.png
 const waterstons_icon_health = require("../assets/waterstons_icon_health.png");
 const waterstons_icon_phone_ring = require("../assets/waterstons_icon_phone_ring.png");
 
+const waterstons_sfx_ring = require("url:../assets/waterstons_phone_ring.wav");
+
+const waterstons_sfx_success = require("url:../assets/sfx_success.wav");
+const waterstons_sfx_fail = require("url:../assets/sfx_fail.wav");
+
 const Resources = {
   call_circle: new ex.ImageSource(waterstons_icon_circle),
   call_triangle: new ex.ImageSource(waterstons_icon_triangle),
@@ -64,6 +69,10 @@ const Resources = {
   fail_circle: new ex.ImageSource(waterstons_fail_circle),
   fail_head_and_legs: new ex.ImageSource(waterstons_fail_head_and_legs),
   fail_triangle: new ex.ImageSource(waterstons_fail_triangle),
+
+  sfx_ring: new ex.Sound(waterstons_sfx_ring),
+  sfx_success: new ex.Sound(waterstons_sfx_success),
+  sfx_fail: new ex.Sound(waterstons_sfx_fail),
 };
 
 function loadSprite(
